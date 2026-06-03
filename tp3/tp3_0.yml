@@ -1,0 +1,16 @@
+---
+- name: Installer apache2 , mysql-server , git , nginx et cowsay
+  hosts: all
+
+  tasks:
+    - name: Display default IPv4 address
+      debug:
+        var: ansible_facts["default_ipv4"]["address"]
+       
+    - name: Display distribution
+      debug:
+        var: ansible_facts["distribution"]
+    
+    - name: Display os_family
+      debug:
+        var: ansible_facts["os_family"]

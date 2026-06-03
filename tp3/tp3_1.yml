@@ -1,0 +1,44 @@
+---
+- name: Installer apache2 , mysql-server , git , nginx et cowsay
+  hosts: all
+
+  tasks:
+    - name: Install apache2 and mysqlserver
+      ansible.builtin.apt:
+        update_cache: true
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apache2
+        - mysql-server
+      when : not ansible_facts["default_ipv4"]["address"] == "10.0.0.74"
+      
+    - name: Install git, nginx and cowsay
+      ansible.builtin.apt:
+        update_cache: true
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - nginx
+        - cowsay
+      when : ansible_facts["default_ipv4"]["address"] == "10.0.0.74"
+    
+    - name: Install ufw on ubuntu
+      ansible.builtin.apt:
+        update_cache: true
+        name: ufw
+        state: present
+      when: ansible_facts["distribution"] == "Ubuntu"
+
+    - name: Gather the rpm package facts   
+      ansible.builtin.package_facts:
+        manager: auto
+    
+    
+    - name: Test Copy index.html 
+      ansible.builtin.template:
+        src: template/index.j2
+        dest: /var/www/html/index.html
+        mode: '0644'
+      when : "'apache2' in ansible_facts.packages or 'nginx' in ansible_facts.packages"
