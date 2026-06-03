@@ -1,0 +1,13 @@
+---
+- name: DesInstaller apache2 et mysql-server 
+  hosts: all
+
+  tasks:
+    - name: DesInstall apache2 and mysqlserver
+      ansible.builtin.apt:
+        update_cache: true
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - apache2
+        - mysql-server
